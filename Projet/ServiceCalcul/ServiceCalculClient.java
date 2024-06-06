@@ -39,7 +39,7 @@ public class ServiceCalculClient implements ServiceCalcul {
 
     @Override
     public Image calculerImage(Scene s, int x0, int y0, int x1, int y1) throws RemoteException { 
-        System.out.println("Calcul en cours");
+        System.out.printf("Calcul de l'image : (%d, %d) %dx%d \n", x0, y0, x1, y1);
         return s.compute(x0, y0, x1, y1);
     }   
 }

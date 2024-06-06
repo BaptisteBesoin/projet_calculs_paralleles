@@ -11,15 +11,15 @@ public class LancerService{
 	    ServiceCentral serviceCentral = (ServiceCentral) UnicastRemoteObject.exportObject(serviceCentralRay, 0);
 
 	    try{
-		Registry reg = LocateRegistry.createRegistry(1099);
-	    
-		try{
-		    reg.rebind("RayCasting", serviceCentral);
-		} catch(RemoteException e){
-		    System.out.println("Erreur dans l'enregistrement du service, bind");
-		}
+			Registry reg = LocateRegistry.createRegistry(1099);
+			
+			try{
+				reg.rebind("RayCasting", serviceCentral);
+			} catch(RemoteException e){
+				System.out.println("Erreur dans l'enregistrement du service, bind");
+			}
 	    } catch (RemoteException e){
-		System.out.println("Erreur dans l'enregistrement du service, annuaire");
+			System.out.println("Erreur dans l'enregistrement du service, annuaire");
 	    }
 	} catch (RemoteException e){
 	    System.out.println("Erreur dans l'enregistrement du service, service central");

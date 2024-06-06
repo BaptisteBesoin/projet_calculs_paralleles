@@ -17,7 +17,7 @@ public class MainClient {
         
         ServiceCentral s = (ServiceCentral) reg.lookup("RayCasting");
 
-        Client c = new Client("simple.txt", 1024, 1024);
+        Client c = new Client("simple3.txt", 512, 512);
 
         ServiceClient serviceClient = (ServiceClient) UnicastRemoteObject.exportObject(c, 0);
         

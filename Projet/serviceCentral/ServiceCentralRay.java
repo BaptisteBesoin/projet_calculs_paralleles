@@ -1,4 +1,8 @@
 import java.rmi.RemoteException;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -16,12 +20,21 @@ public class ServiceCentralRay implements ServiceCentral {
 
     public void enregistrerServiceCalcul(ServiceCalcul c) throws RemoteException{
 	    listeClient.add(c);
-	    System.out.println("Nouveau service de calcul ajouté");
+	    try {
+            System.out.println("Nouveau service de calcul ajouté : " + RemoteServer.getClientHost());
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void enregistrerClient(ServiceClient c) throws RemoteException{
 	    client = c;
-	    System.out.println("Nouveau service de client ajouté");
+	    try {
+            System.out.println("Nouveau service de client ajouté : " + RemoteServer.getClientHost());
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
     }
 
     public void effectuerCalcul(Scene scene, int nbCarreParLigne) throws RemoteException {
@@ -34,17 +47,21 @@ public class ServiceCentralRay implements ServiceCentral {
             }
         }
 
+        Instant debut = Instant.now();
         while (coordonneesAfaire.size() != 0) {
             Iterator<Coordonnees> iterator = coordonneesAfaire.iterator();
             int i = 0;
             while (iterator.hasNext()) {
                 Coordonnees coordonnees = iterator.next();
 
-                //Attente pour le client le temps que des services de calcul s'initialise
-                // TO DO
-                //while (verifierServiceCalculDispo()) {
-                //    System.out.println("Attente d'un nouveau service de calcul");
-                //}
+                while (listeClient.size() == 0) {
+                    System.out.println("Attente d'un nouveau service de calcul");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 ServiceCalcul client = listeClient.get(i % listeClient.size());
 
@@ -56,14 +73,16 @@ public class ServiceCentralRay implements ServiceCentral {
             }
         }
 
-        System.out.println(coordonneesAfaire.size());
+        Instant fin = Instant.now();
+        long duree = Duration.between(debut, fin).toMillis();
+
+        System.out.println("FINI : " + duree + "ms");
     }
 
     @Override
     public void afficherImage(Image i, int x, int y) throws RemoteException {
         this.client.afficherPartieImage(i, x, y);
         coordonneesAfaire.remove(new Coordonnees(x, y));
-        System.out.println(coordonneesAfaire.size());
     }
 
     public synchronized void removeServiceCalcul(ServiceCalcul serviceCalcul) throws RemoteException{

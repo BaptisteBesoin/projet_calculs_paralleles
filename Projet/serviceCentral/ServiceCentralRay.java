@@ -67,7 +67,7 @@ public class ServiceCentralRay implements ServiceCentral {
 
                 ServiceCalcul client = listeClient.get(i % listeClient.size());
 
-                ThreadServiceCalcul thread = new ThreadServiceCalcul(this, client, scene, coordonnees.getX(), coordonnees.getY(), nbCarreParLigne);
+                ThreadServiceCalcul thread = new ThreadServiceCalcul(this, client, scene, coordonnees.getX(), coordonnees.getY(), tailleCarre);
                 thread.start();
 
                 i++;

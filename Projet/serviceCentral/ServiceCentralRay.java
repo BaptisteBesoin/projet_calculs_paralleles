@@ -41,8 +41,10 @@ public class ServiceCentralRay implements ServiceCentral {
         int largeur = client.getLargeur();
         int hauteur = client.getHauteur();
 
-        for (int y = 0; y < hauteur; y+=nbCarreParLigne) {
-            for (int x = 0; x < largeur; x+=nbCarreParLigne) {
+        int tailleCarre = largeur/nbCarreParLigne;
+
+        for (int y = 0; y < hauteur; y+=tailleCarre) {
+            for (int x = 0; x < largeur; x+=tailleCarre) {
                 coordonneesAfaire.add(new Coordonnees(x, y));
             }
         }
